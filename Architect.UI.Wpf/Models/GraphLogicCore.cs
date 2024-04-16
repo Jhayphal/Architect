@@ -1,6 +1,4 @@
-﻿using GraphX.Controls.Models;
-using GraphX.Controls;
-using GraphX.Logic.Models;
+﻿using GraphX.Logic.Models;
 
 using QuickGraph;
 
