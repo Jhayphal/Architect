@@ -1,4 +1,4 @@
-﻿namespace ArchitectFramework
+﻿namespace Architect.Contracts
 {
     public abstract class Dependency<T> : IDependency
     {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ArchitectFramework
+namespace Architect.Contracts
 {
     public abstract class DependencyNode<T> : IDependencyNode
     {

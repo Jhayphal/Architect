@@ -4,17 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{8B472E95-58AE-4D0A-8B4A-39F9FF480877}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>ArchitectFramework</RootNamespace>
-    <AssemblyName>ArchitectFramework</AssemblyName>
+    <ProjectGuid>{E3F1AAE1-A905-488E-B56F-77B30BCC7848}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Architect.Assemblies.Framework</RootNamespace>
+    <AssemblyName>Architect.Assemblies.Framework</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,7 +23,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -43,17 +41,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="AssemblyDependency.cs" />
+    <Compile Include="AssemblyDependencyNode.cs" />
+    <Compile Include="AssemblyDependenciesTreeBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Architect.Assemblies.Framework\Architect.Assemblies.Framework.csproj">
-      <Project>{e3f1aae1-a905-488e-b56f-77b30bcc7848}</Project>
-      <Name>Architect.Assemblies.Framework</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Architect.Contracts\Architect.Contracts.csproj">
       <Project>{2a59ccc4-9258-4197-bc06-a35fbfba91bc}</Project>
       <Name>Architect.Contracts</Name>

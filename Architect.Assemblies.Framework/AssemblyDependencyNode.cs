@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
 
-namespace ArchitectFramework
+using Architect.Contracts;
+
+namespace Architect.Assemblies.Framework
 {
     public sealed class AssemblyDependencyNode : DependencyNode<Assembly>
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ArchitectFramework
+namespace Architect.Contracts
 {
     public interface IDependencyNode : IEquatable<IDependencyNode>
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ArchitectFramework
+namespace Architect.Contracts
 {
     public interface IDependency : IEquatable<IDependency>
     {

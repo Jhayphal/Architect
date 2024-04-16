@@ -1,6 +1,8 @@
 ﻿using System.Reflection;
 
-namespace ArchitectFramework
+using Architect.Contracts;
+
+namespace Architect.Assemblies.Framework
 {
     public sealed class AssemblyDependency : Dependency<Assembly>
     {
