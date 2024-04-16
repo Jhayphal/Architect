@@ -11,17 +11,78 @@ namespace ArchitectFramework
 {
     public sealed class DependenciesTreeBuilder
     {
-        private readonly HashSet<IDependencyNode> dependencies = new HashSet<IDependencyNode>();
+        private readonly List<string> assemblies = new List<string>();
 
-        public bool Add(IDependencyNode dependency) => dependencies.Add(dependency);
+        public void AddAssemblyPath(string fileName) => assemblies.Add(fileName);
 
-        public IEnumerable<IDependencyNode> GetRoots() => Enumerable.Empty<IDependencyNode>();
+        public void AddAssembliesPaths(IEnumerable<string> filesNames) => assemblies.AddRange(filesNames);
+
+        public IReadOnlyCollection<IDependencyNode> Build()
+        {
+            if (assemblies.Count == 0)
+            {
+                return Array.Empty<IDependencyNode>();
+            }
+
+            var namesCache = assemblies.ToDictionary(p => Path.GetFileNameWithoutExtension(p));
+            var loadedAssemblies = new Dictionary<string, AssemblyDependencyNode>();
+
+            foreach (var path in assemblies)
+            {
+                Assembly assembly = null;
+
+                try
+                {
+                    assembly = Assembly.LoadFrom(path);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Cannot load assembly '{path}'. Error: {ex.Message}");
+                    continue;
+                }
+
+                Console.WriteLine("Assembly was loaded: " + assembly.FullName);
+
+                if (loadedAssemblies.ContainsKey(assembly.FullName))
+                {
+                    Console.WriteLine("Assembly already checked. Skipped.");
+                    continue;
+                }
+
+                var dependency = new AssemblyDependencyNode(new AssemblyDependency(assembly));
+                loadedAssemblies.Add(assembly.FullName, dependency);
+            }
+
+            foreach (var dependencyNode in loadedAssemblies.Values)
+            {
+                var dependency = dependencyNode.Value;
+                Console.WriteLine($"Building assembly dependencies for '{dependency.Name}'...");
+                
+                foreach (var reference in dependency.Value.GetReferencedAssemblies())
+                {
+                    if (!loadedAssemblies.TryGetValue(reference.FullName, out var referencedDependency))
+                    {
+                        Console.WriteLine($"Referenced dependency '{reference.FullName}' was not loaded. Skipped.");
+                        continue;
+                    }
+
+                    if (referencedDependency.AddChild(dependencyNode))
+                    {
+                        dependencyNode.AddAncestor(referencedDependency);
+                    }
+                }
+            }
+
+            return loadedAssemblies.Values
+                .Where(d => d.Ancestors.Count == 0)
+                .ToArray();
+        }
     }
 
     internal class Program
     {
         private const string assemblyAlreadyLoadedExceptionMessage = "Assembly with same name is already loaded";
-        private const string targetFolder = @"D:\DataGridExtensions-master\src";
+        private const string targetFolder = @"C:\Users\olegn\source\repos\DependencyTargetSample\DependencyTargetSample\bin\Debug";
 
         static void Main()
         {
@@ -34,7 +95,6 @@ namespace ArchitectFramework
                 .Select(r => new AssemblyDependencyNode(r))
                 .ToArray();
 
-            var cache = new HashSet<Dependency<Assembly>>();
             foreach (var dependency in roots)
             {
                 var localPath = Path.GetDirectoryName(dependency.Value.Location);
@@ -43,7 +103,7 @@ namespace ArchitectFramework
                     .Where(f => f.StartsWith(localPath))
                     .ToArray();
 
-                LoadChildrenDependencies(dependency, cache, localFiles);
+                LoadChildrenDependencies(dependency, new HashSet<Dependency<Assembly>>(), localFiles);
             }
 
             Console.WriteLine("Push Enter key...");
@@ -56,6 +116,8 @@ namespace ArchitectFramework
 
                 Console.WriteLine();
             }
+
+            Console.ReadLine();
         }
 
         private static void PrintChildrenDependencies(IDependencyNode node, int level = 0)
